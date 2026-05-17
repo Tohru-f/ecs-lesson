@@ -43,6 +43,7 @@ jobs:
         id: build-image-webapp
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          BUILDX_GIT_INFO: false
         run: |
           cd sample-webapp
           docker build --platform linux/amd64 -t $ECR_REGISTRY/$WEBAPP_CONTAINER_NAME: $WEBAPP_TAG .
@@ -54,6 +55,7 @@ jobs:
         id: build-image-backend
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          BUILDX_GIT_INFO: false
         run: |
           cd sample-backend
           docker build --platform linux/amd64 -t $ECR_REGISTRY/$BACKEND_CONTAINER_NAME: $BACKEND_TAG .
@@ -65,6 +67,7 @@ jobs:
         id: build-image-restapi
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          BUILDX_GIT_INFO: false
         run: |
           cd sample-restapi
           docker build --platform linux/amd64 -t $ECR_REGISTRY/$RESTAPI_CONTAINER_NAME: $RESTAPI_TAG .
