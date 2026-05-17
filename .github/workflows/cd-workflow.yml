@@ -46,7 +46,7 @@ jobs:
           BUILDX_GIT_INFO: false
         run: |
           cd sample-webapp
-          docker build --platform linux/amd64 -t $ECR_REGISTRY/$WEBAPP_CONTAINER_NAME: $WEBAPP_TAG .
+          docker build --platform linux/amd64 -t $ECR_REGISTRY/$WEBAPP_CONTAINER_NAME:$WEBAPP_TAG .
           docker tag $ECR_REGISTRY/$WEBAPP_CONTAINER_NAME: $WEBAPP_TAG $ECR_REGISTRY/$WEBAPP_CONTAINER_NAME: latest
           docker push $ECR_REGISTRY/$WEBAPP_CONTAINER_NAME: $WEBAPP_TAG
           docker push $ECR_REGISTRY/$WEBAPP_CONTAINER_NAME: latest
@@ -58,7 +58,7 @@ jobs:
           BUILDX_GIT_INFO: false
         run: |
           cd sample-backend
-          docker build --platform linux/amd64 -t $ECR_REGISTRY/$BACKEND_CONTAINER_NAME: $BACKEND_TAG .
+          docker build --platform linux/amd64 -t $ECR_REGISTRY/$BACKEND_CONTAINER_NAME:$BACKEND_TAG .
           docker tag $ECR_REGISTRY/$BACKEND_CONTAINER_NAME: $BACKEND_TAG $ECR_REGISTRY/$BACKEND_CONTAINER_NAME: latest
           docker push $ECR_REGISTRY/$BACKEND_CONTAINER_NAME: $BACKEND_TAG
           docker push $ECR_REGISTRY/$BACKEND_CONTAINER_NAME: latest
@@ -70,7 +70,7 @@ jobs:
           BUILDX_GIT_INFO: false
         run: |
           cd sample-restapi
-          docker build --platform linux/amd64 -t $ECR_REGISTRY/$RESTAPI_CONTAINER_NAME: $RESTAPI_TAG .
+          docker build --platform linux/amd64 -t $ECR_REGISTRY/$RESTAPI_CONTAINER_NAME:$RESTAPI_TAG .
           docker tag $ECR_REGISTRY/$RESTAPI_CONTAINER_NAME: $RESTAPI_TAG $ECR_REGISTRY/$RESTAPI_CONTAINER_NAME: latest
           docker push $ECR_REGISTRY/$RESTAPI_CONTAINER_NAME: $RESTAPI_TAG
           docker push $ECR_REGISTRY/$RESTAPI_CONTAINER_NAME: latest
