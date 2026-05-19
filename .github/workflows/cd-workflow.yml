@@ -17,8 +17,8 @@ env:
   BACKEND_TAG: 1.0.0
   RESTAPI_TAG: 1.0.0
   SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-  TASK-WEBAPP: ecs-sample-webapp-task-def
-  TASK-RESTAPI: ecs-sample-restapi
+  TASK_WEBAPP: ecs-sample-webapp-task-def
+  TASK_RESTAPI: ecs-sample-restapi
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
 
 jobs:
@@ -80,12 +80,12 @@ jobs:
         run:
           IMAGE_URI_WEBAPP="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ecs-sample-webapp:latest"
           IMAGE_URI_BACKEND="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ecs-sample-backend:latest"
-          aws ecs describe-task-definition --cluster ecs-lesson-cluster --task-definition $TASK-WEBAPP --query 'taskDefinition' --output json > current_task_webapp_def.json
+          aws ecs describe-task-definition --cluster ecs-lesson-cluster --task-definition $TASK_WEBAPP --query 'taskDefinition' --output json > current_task_webapp_def.json
           cat current_task_webapp_def.json | jq ' .containerDefinitions |= (map(if .name == "sample-webapp" then .image = env.IMAGE_URI_WEBAPP elif .name == "sample-backend" then .image = env.IMAGE_URI_BACKEND else . end)) | del(.revision, .status, .requiresAttributes, .compatibilities, .taskDefinitionArn, .registeredAt, .registeredBy)' > new_task_webapp_def.json
           NEW_TASK_WEBAPP_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://new_task_webapp_def.json --query 'taskDefinition.taskDefinitionArn' --output text)
 
           IMAGE_URI_RESTAPI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ecs-sample-restapi:latest"
-          aws ecs describe-task-definition --cluster ecs-lesson-cluster --task-definition $TASK-RESTAPI --query 'taskDefinition' --output json > current_task_restapi_def.json
+          aws ecs describe-task-definition --cluster ecs-lesson-cluster --task-definition $TASK_RESTAPI --query 'taskDefinition' --output json > current_task_restapi_def.json
           cat current_task_restapi_def.json | jq ' .containerDefinitions |= (map(if .name == "sample-restapi" then .image = env.IMAGE_URI_RESTAPI  else . end)) | del(.revision, .status, .requiresAttributes, .compatibilities, .taskDefinitionArn, .registeredAt, .registeredBy)' > new_task_restapi_def.json
           NEW_TASK_RESTAPI_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://new_task_restapi_def.json --query 'taskDefinition.taskDefinitionArn' --output text)
 
