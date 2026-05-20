@@ -105,7 +105,7 @@ jobs:
           --cluster ecs-lesson-cluster \
           --service $ECS_WEBAPP_SERVICE \
           --task-definition steps.update-task-definition.outputs.$NEW_TASK_WEBAPP_DEF_ARN \
-          --force-new-deployment
+          --force-new-deployment \
 
           aws ecs update-service \
           --cluster ecs-lesson-cluster \
