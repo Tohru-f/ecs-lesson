@@ -102,15 +102,16 @@ jobs:
       - name: Deploy to ECS
         run: |
           aws ecs update-service \
-          --service $ECS_WEBAPP_SERVICE \
           --cluster ecs-lesson-cluster \
+          --service $ECS_WEBAPP_SERVICE \
           --task-definition steps.update-task-definition.outputs.$NEW_TASK_WEBAPP_DEF_ARN \
           --force-new-deployment
 
           aws ecs update-service \
-          --service $ECS_RESTAPI_SERVICE \
           --cluster ecs-lesson-cluster \
-          --task-definition steps.update-task-definition.outputs.$NEW_TASK_RESTAPI_DEF_ARN \--force-new-deployment
+          --service $ECS_RESTAPI_SERVICE \
+          --task-definition steps.update-task-definition.outputs.$NEW_TASK_RESTAPI_DEF_ARN \
+          --force-new-deployment
 
       - name: Success
         uses: rtCamp/action-slack-notify@v2.0.2
