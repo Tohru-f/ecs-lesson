@@ -77,7 +77,7 @@ jobs:
 
       - name: Update task definition image
         id: update-task-definition
-        run:
+        run: |
           IMAGE_URI_WEBAPP="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ecs-sample-webapp:latest" \
           IMAGE_URI_BACKEND="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ecs-sample-backend:latest" \
           aws ecs describe-task-definition \
