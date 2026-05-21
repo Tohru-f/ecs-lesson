@@ -87,7 +87,10 @@ jobs:
           --output json > current_task_webapp_def.json
 
           cat current_task_webapp_def.json | jq ' .containerDefinitions |= (map(if .name == "sample-webapp" then .image = env.IMAGE_URI_WEBAPP elif .name == "sample-backend" then .image = env.IMAGE_URI_BACKEND else . end)) | del(.revision, .status, .requiresAttributes, .compatibilities, .taskDefinitionArn, .registeredAt, .registeredBy)' > new_task_webapp_def.json \
-          NEW_TASK_WEBAPP_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://new_task_webapp_def.json --query 'taskDefinition.taskDefinitionArn' --output text)
+          NEW_TASK_WEBAPP_DEF_ARN=$(aws ecs register-task-definition \
+          --cli-input-json file://new_task_webapp_def.json \
+          --query 'taskDefinition.taskDefinitionArn' \
+          --output text)
           echo "NEW_TASK_WEBAPP_DEF_ARN=$NEW_TASK_WEBAPP_DEF_ARN" >> "$GITHUB_OUTPUT"
 
           IMAGE_URI_RESTAPI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ecs-sample-restapi:latest"
@@ -98,7 +101,10 @@ jobs:
           --output json > current_task_restapi_def.json
 
           cat current_task_restapi_def.json | jq ' .containerDefinitions |= (map(if .name == "sample-restapi" then .image = env.IMAGE_URI_RESTAPI  else . end)) | del(.revision, .status, .requiresAttributes, .compatibilities, .taskDefinitionArn, .registeredAt, .registeredBy)' > new_task_restapi_def.json \
-          NEW_TASK_RESTAPI_DEF_ARN=$(aws ecs register-task-definition --cli-input-json file://new_task_restapi_def.json --query 'taskDefinition.taskDefinitionArn' --output text)
+          NEW_TASK_RESTAPI_DEF_ARN=$(aws ecs register-task-definition \
+          --cli-input-json file://new_task_restapi_def.json \
+          --query 'taskDefinition.taskDefinitionArn' \
+          --output text)
           echo "NEW_TASK_RESTAPI_DEF_ARN=$NEW_TASK_RESTAPI_DEF_ARN" >> "$GITHUB_OUTPUT"
 
       - name: Deploy to ECS
@@ -106,13 +112,13 @@ jobs:
           aws ecs update-service \
           --cluster ecs-lesson-cluster \
           --service $ECS_WEBAPP_SERVICE \
-          --task-definition ${{ steps.update-task-definition.outputs.NEW_TASK_WEBAPP_DEF_ARN }} \
+          --task-definition "${{ steps.update-task-definition.outputs.NEW_TASK_WEBAPP_DEF_ARN }}" \
           --force-new-deployment \
 
           aws ecs update-service \
           --cluster ecs-lesson-cluster \
           --service $ECS_RESTAPI_SERVICE \
-          --task-definition ${{ steps.update-task-definition.outputs.NEW_TASK_RESTAPI_DEF_ARN }} \
+          --task-definition "${{ steps.update-task-definition.outputs.NEW_TASK_RESTAPI_DEF_ARN }}" \
           --force-new-deployment
 
       - name: Success
