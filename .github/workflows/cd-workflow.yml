@@ -80,7 +80,7 @@ jobs:
         run: |
           IMAGE_URI_WEBAPP="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ecs-sample-webapp:latest"
           IMAGE_URI_BACKEND="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ecs-sample-backend:latest"
-          aws ecs describe-task-definition \
+          aws ecs describe-task-definition
           --cluster ecs-lesson-cluster \
           --task-definition $TASK_WEBAPP \
           --query 'taskDefinition' \
@@ -91,7 +91,7 @@ jobs:
           echo "NEW_TASK_WEBAPP_DEF_ARN=$NEW_TASK_WEBAPP_DEF_ARN" >> "$GITHUB_OUTPUT"
 
           IMAGE_URI_RESTAPI="$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/ecs-sample-restapi:latest"
-          aws ecs describe-task-definition \
+          aws ecs describe-task-definition
           --cluster ecs-lesson-cluster \
           --task-definition $TASK_RESTAPI \
           --query 'taskDefinition' \
@@ -103,13 +103,13 @@ jobs:
 
       - name: Deploy to ECS
         run: |
-          aws ecs update-service \
+          aws ecs update-service
           --cluster ecs-lesson-cluster \
           --service $ECS_WEBAPP_SERVICE \
           --task-definition ${{ steps.update-task-definition.outputs.NEW_TASK_WEBAPP_DEF_ARN }} \
           --force-new-deployment \
 
-          aws ecs update-service \
+          aws ecs update-service
           --cluster ecs-lesson-cluster \
           --service $ECS_RESTAPI_SERVICE \
           --task-definition ${{ steps.update-task-definition.outputs.NEW_TASK_RESTAPI_DEF_ARN }} \
