@@ -88,6 +88,7 @@ jobs:
           echo "IMAGE_URI_WEBAPP=$IMAGE_URI_WEBAPP"
           echo "IMAGE_URI_BACKEND=$IMAGE_URI_BACKEND"
           jq '.containerDefinitions[].name' current_task_webapp_def.json
+          jq '.containerDefinitions |= (map(if .name == "sample-webapp" then .image = env.IMAGE_URI_WEBAPP elif .name == "sample-backend" then .image = env.IMAGE_URI_BACKEND else . end)) ' current_task_webapp_def.json | jq '.containerDefinitions[] | {name, image}'
           cat current_task_webapp_def.json | jq ' .containerDefinitions |= (map(if .name == "sample-webapp" then .image = env.IMAGE_URI_WEBAPP elif .name == "sample-backend" then .image = env.IMAGE_URI_BACKEND else . end)) | del(.revision, .status, .requiresAttributes, .compatibilities, .taskDefinitionArn, .registeredAt, .registeredBy)' > new_task_webapp_def.json
           NEW_TASK_WEBAPP_DEF_ARN=$(aws ecs register-task-definition \
           --cli-input-json file://new_task_webapp_def.json \
